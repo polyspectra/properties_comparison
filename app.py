@@ -6,6 +6,7 @@ import pandas as pd
 import os
 
 app = dash.Dash(__name__)
+app.title = 'polySpectra Materials Comparison'
 server = app.server
 
 material_data = pd.read_csv(
