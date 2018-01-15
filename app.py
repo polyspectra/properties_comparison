@@ -100,5 +100,5 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class
     }
 
 
-# if __name__ == '__main__':
-#     app.run_server(debug=True)
+if __name__ == '__main__':
+    app.run_server(debug=True)
