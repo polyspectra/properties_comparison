@@ -10,12 +10,13 @@ app.title = 'polySpectra Materials Comparison'
 server = app.server
 
 material_data = pd.read_csv(
-    'https://gist.githubusercontent.com/sambozek/d3a443cee919da76c10caa5de126b94e/raw/008802685e1a463d9bbe65d4a8980241aee09cee/material_data.csv')
+    'https://gist.githubusercontent.com/sambozek/5150267fd7dff4249ce789ba60ddd905/raw/d228f6488f0911048dee0a3f631f6b07f0aeff6b/materials.csv')
 material_data_values = material_data[['Ultimate Tensile Strength (MPa)', 'Tensile Modulus (GPa)', 'Elongation at Break (%)', 'Flexural Modulus (GPa)', 'Heat Deflection Temperature at 0.455 MPa (oC)', 'Heat Deflection Temperature at 1.82 MPa (oC)']].copy()
 material_data_index = material_data[['Material Name', 'AM Process']].copy()
 material_data_columns = list(material_data_values.columns)
 material_classes = [{'label': i, 'value': i} for i in material_data['AM Process'].unique()]
-material_classes.append({'label': 'All Database Materials', 'val': 'All Database Materials'})
+material_classes.append(
+    {'label': 'All Database Materials', 'value': 'All Database Materials'})
 
 app.layout = html.Div([
     html.Div([
@@ -67,20 +68,24 @@ app.layout = html.Div([
 def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
     
     if Material_Class == 'All Database Materials':
-        data = {'data' : [go.Scatter(
-                x=material_data[xaxis_column_name],
-                y=material_data[yaxis_column_name],
-                text=material_data['Material Name'],
+        
+        data = {'data': [go.Scatter(
+                x=material_data[material_data['AM Process']
+                                == i][xaxis_column_name],
+                y=material_data[material_data['AM Process']
+                                == i][yaxis_column_name],
+                text=material_data[material_data['AM Process']
+                                   == i]['Material Name'],
                 mode='markers',
                 name=i,
-                visible = True if i == Material_Class else False,
+                visible=True,
                 marker={
-                    'size': 14 if i == 'Additively Manufatcured-COR-0' else 8,
+                    'size': 14,
                     'opacity': 0.6,
                     'line': {'width': 0.1, 'color': 'white'
-                    }
+                             }
                 }
-                ) for i in material_data['AM Process'].unique()],}
+                ) for i in material_data['AM Process'].unique()], }
     else:
         data = {'data' : [go.Scatter(
                 x=material_data[material_data['AM Process'] == i][xaxis_column_name],
@@ -90,31 +95,14 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
                 name=i,
                 visible=True if i == Material_Class else False,
                 marker={
-                    'size': 14 if i == 'Additively Manufatcured-COR-0' else 8,
+                    'size': 8,
                     'opacity': 0.6,
                     'line': {'width': 0.1, 'color': 'white'
                              }
                 }
                 ) for i in material_data['AM Process'].unique()],}
 
-
-    return { 
-            'data': [go.Scatter(
-                x=material_data[material_data['AM Process'] == i][xaxis_column_name],
-                y=material_data[material_data['AM Process'] == i][yaxis_column_name],
-                text=material_data[material_data['AM Process'] == i]['Material Name'],
-                mode='markers',
-                name=i,
-                visible = True if i == Material_Class else False,
-                marker={
-                    'size': 14 if i == 'Additively Manufatcured-COR-0' else 8,
-                    'opacity': 0.6,
-                    'line': {'width': 0.1, 'color': 'white'
-                    }
-                }
-                ) for i in material_data['AM Process'].unique()],
-
-
+    data.update({ 
         'layout': go.Layout(
             title=Material_Class,
             xaxis={
@@ -129,7 +117,9 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
             hovermode='closest'
 
         )
-    }
+    })
+
+    return data
 
 
 if __name__ == '__main__':
