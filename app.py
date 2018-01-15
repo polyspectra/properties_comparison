@@ -14,18 +14,18 @@ material_data = pd.read_csv(
 material_data_values = material_data[['Ultimate Tensile Strength (MPa)', 'Tensile Modulus (GPa)', 'Elongation at Break (%)', 'Flexural Modulus (GPa)', 'Heat Deflection Temperature at 0.455 MPa (oC)', 'Heat Deflection Temperature at 1.82 MPa (oC)']].copy()
 material_data_index = material_data[['Material Name', 'AM Process']].copy()
 material_data_columns = list(material_data_values.columns)
+material_classes = [{'label': i, 'value': i} for i in material_data['AM Process'].unique()]
+material_classes.append({'label': 'All Database Materials', 'val': 'All Database Materials'})
 
 app.layout = html.Div([
     html.Div([
 
         html.Div([
             dcc.Dropdown(
-                id='Material Class',
-                options=[ 
-                {'label': i, 'value': i} for i in material_data['AM Process'].unique()
-                ],
+                id='Material_Class',
+                options=material_classes,
                 value='Additively Manufactured-Photopolymerization',
-                placeholder ='Select Material Class',  
+                placeholder ='Select Material_Class',  
             )
             
         ],
@@ -62,13 +62,43 @@ app.layout = html.Div([
     dash.dependencies.Output('indicator-graphic', 'figure'),
     [dash.dependencies.Input('xaxis-column', 'value'),
      dash.dependencies.Input('yaxis-column', 'value'),
-      dash.dependencies.Input('Material Class', 'value')
+      dash.dependencies.Input('Material_Class', 'value')
      ])
-def update_graph(xaxis_column_name, yaxis_column_name, Material_Class
-                ):
+def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
     
+    if Material_Class == 'All Database Materials':
+        data = {'data' : [go.Scatter(
+                x=material_data[xaxis_column_name],
+                y=material_data[yaxis_column_name],
+                text=material_data['Material Name'],
+                mode='markers',
+                name=i,
+                visible = True if i == Material_Class else False,
+                marker={
+                    'size': 14 if i == 'Additively Manufatcured-COR-0' else 8,
+                    'opacity': 0.6,
+                    'line': {'width': 0.1, 'color': 'white'
+                    }
+                }
+                ) for i in material_data['AM Process'].unique()],}
+    else:
+        data = {'data' : [go.Scatter(
+                x=material_data[material_data['AM Process'] == i][xaxis_column_name],
+                y=material_data[material_data['AM Process'] == i][yaxis_column_name],
+                text=material_data[material_data['AM Process'] == i]['Material Name'],
+                mode='markers',
+                name=i,
+                visible=True if i == Material_Class else False,
+                marker={
+                    'size': 14 if i == 'Additively Manufatcured-COR-0' else 8,
+                    'opacity': 0.6,
+                    'line': {'width': 0.1, 'color': 'white'
+                             }
+                }
+                ) for i in material_data['AM Process'].unique()],}
+
+
     return { 
-       
             'data': [go.Scatter(
                 x=material_data[material_data['AM Process'] == i][xaxis_column_name],
                 y=material_data[material_data['AM Process'] == i][yaxis_column_name],
@@ -80,7 +110,7 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class
                     'size': 14 if i == 'Additively Manufatcured-COR-0' else 8,
                     'opacity': 0.6,
                     'line': {'width': 0.1, 'color': 'white'
-                     }
+                    }
                 }
                 ) for i in material_data['AM Process'].unique()],
 
