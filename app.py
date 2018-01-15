@@ -6,6 +6,7 @@ import pandas as pd
 import os
 
 app = dash.Dash(__name__)
+server = app.server
 
 material_data = pd.read_csv(
     'https://gist.githubusercontent.com/sambozek/d3a443cee919da76c10caa5de126b94e/raw/008802685e1a463d9bbe65d4a8980241aee09cee/material_data.csv')
