@@ -10,9 +10,9 @@ app.title = 'polySpectra Materials Comparison'
 server = app.server
 
 material_data = pd.read_csv(
-    'https://gist.githubusercontent.com/sambozek/5150267fd7dff4249ce789ba60ddd905/raw/d228f6488f0911048dee0a3f631f6b07f0aeff6b/materials.csv')
+    'https://gist.githubusercontent.com/sambozek/5150267fd7dff4249ce789ba60ddd905/raw/38a9a83949dfe9acb9f88ead3da334809dbd9d44/materials.csv')
 material_data_values = material_data[['Ultimate Tensile Strength (MPa)', 'Tensile Modulus (GPa)', 'Elongation at Break (%)', 'Flexural Modulus (GPa)', 'Heat Deflection Temperature at 0.455 MPa (oC)', 'Heat Deflection Temperature at 1.82 MPa (oC)']].copy()
-material_data_index = material_data[['Material Name', 'AM Process']].copy()
+material_data_index = material_data[['Name', 'AM Process']].copy()
 material_data_columns = list(material_data_values.columns)
 material_classes = [{'label': i, 'value': i} for i in material_data['AM Process'].unique()]
 material_classes.append(
@@ -25,7 +25,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='Material_Class',
                 options=material_classes,
-                value='Additively Manufactured-Photopolymerization',
+                value='Additive-Photopolymer',
                 placeholder ='Select Material_Class',  
             )
             
@@ -75,7 +75,7 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
                 y=material_data[material_data['AM Process']
                                 == i][yaxis_column_name],
                 text=material_data[material_data['AM Process']
-                                   == i]['Material Name'],
+                                   == i]['Name'],
                 mode='markers',
                 name=i,
                 visible=True,
@@ -90,7 +90,7 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
         data = {'data' : [go.Scatter(
                 x=material_data[material_data['AM Process'] == i][xaxis_column_name],
                 y=material_data[material_data['AM Process'] == i][yaxis_column_name],
-                text=material_data[material_data['AM Process'] == i]['Material Name'],
+                text=material_data[material_data['AM Process'] == i]['Name'],
                 mode='markers',
                 name=i,
                 visible=True if i == Material_Class else False,
