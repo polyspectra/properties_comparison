@@ -19,6 +19,12 @@ material_classes.append(
     {'label': 'All Database Materials', 'value': 'All Database Materials'})
 
 app.layout = html.Div([
+    dcc.Markdown(''' 
+# Properties Comparison of Additive Materials
+#### Built with love by [polySpectra](http://polyspectra.com)
+#### Fork on [Github](https://github.com/polyspectra/)
+        '''
+    ),
     html.Div([
 
         html.Div([
@@ -54,6 +60,15 @@ app.layout = html.Div([
         ],style={'width': '33.33%', 'display': 'inline-block'})
     ]),
     dcc.Graph(id='indicator-graphic'),
+
+# dcc.Markdown('''
+# ##Definitions:
+
+# * **Additive** - Also known as '3D-Printing', where the part is built up layer by layer
+#     * **Sintering** - The fusion of powdered materials into solid through use of heat
+#     * **Extrusion** - Thermoplastic melted and deposited in layer by layer fashion.
+#     * **Photopolymer** - Creation of a solid by exposing liquid to light 
+# '''),
 
 
 ])
