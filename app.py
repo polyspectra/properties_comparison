@@ -74,13 +74,13 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
                                 == i][xaxis_column_name],
                 y=material_data[material_data['AM Process']
                                 == i][yaxis_column_name],
-                text=material_data[material_data['AM Process']
-                                   == i]['Name'],
+                text=material_data[material_data['AM Process'] == i]['Supplier'] + '\n' + material_data[material_data['AM Process']
+                                                                                                        == i]['Name'] + '\n' + material_data[material_data['AM Process'] == i]['Specific Type'],
                 mode='markers',
                 name=i,
                 visible=True,
                 marker={
-                    'size': 14,
+                    'size': 16,
                     'opacity': 0.6,
                     'line': {'width': 0.1, 'color': 'white'
                              }
@@ -90,12 +90,12 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
         data = {'data' : [go.Scatter(
                 x=material_data[material_data['AM Process'] == i][xaxis_column_name],
                 y=material_data[material_data['AM Process'] == i][yaxis_column_name],
-                text=material_data[material_data['AM Process'] == i]['Name'],
+                text=material_data[material_data['AM Process'] == i]['Supplier'] + '\n' + material_data[material_data['AM Process'] == i]['Name'] + '\n' + material_data[material_data['AM Process'] == i]['Specific Type'],
                 mode='markers',
                 name=i,
                 visible=True if i == Material_Class else False,
                 marker={
-                    'size': 8,
+                    'size': 16,
                     'opacity': 0.6,
                     'line': {'width': 0.1, 'color': 'white'
                              }
