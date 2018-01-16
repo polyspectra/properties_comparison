@@ -25,7 +25,7 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='Material_Class',
                 options=material_classes,
-                value='Additive-Photopolymer',
+                value='All Database Materials',
                 placeholder ='Select Material_Class',  
             )
             
