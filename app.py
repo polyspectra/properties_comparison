@@ -22,7 +22,7 @@ app.layout = html.Div([
     dcc.Markdown(''' 
 # Properties Comparison of Additive Materials
 #### Built with love by [polySpectra](http://polyspectra.com)
-#### Fork on [Github](https://github.com/polyspectra/)
+#### Fork on [Github](https://github.com/polyspectra/properties_comparison)
         '''
     ),
     html.Div([
