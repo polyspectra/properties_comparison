@@ -10,7 +10,7 @@ app.title = 'polySpectra Materials Comparison'
 server = app.server
 
 material_data = pd.read_csv(
-    'https://gist.githubusercontent.com/sambozek/5150267fd7dff4249ce789ba60ddd905/raw/cf9531d3b5fcddb5d63abc32b561bcae1d0b7058/materials.csv')
+    'https://gist.githubusercontent.com/sambozek/5150267fd7dff4249ce789ba60ddd905/raw/b695e8869d94e64830b12003954471d11420c232/materials.csv')
 material_data_values = material_data[['Ultimate Tensile Strength (MPa)', 'Tensile Modulus (GPa)', 'Elongation at Break (%)', 'Flexural Modulus (GPa)', 'Heat Deflection Temperature at 0.455 MPa (oC)', 'Heat Deflection Temperature at 1.82 MPa (oC)']].copy()
 material_data_index = material_data[['Name', 'AM Process']].copy()
 material_data_columns = list(material_data_values.columns)
