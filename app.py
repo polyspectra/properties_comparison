@@ -15,8 +15,8 @@ material_data_values = material_data[['Ultimate Tensile Strength (MPa)', 'Tensil
 material_data_index = material_data[['Name', 'AM Process']].copy()
 material_data_columns = list(material_data_values.columns)
 material_classes = [{'label': i, 'value': i} for i in material_data['AM Process'].unique()]
-material_classes.append(
-    {'label': 'All Database Materials', 'value': 'All Database Materials'})
+# material_classes.append(
+#     {'label': 'All Database Materials', 'value': 'All Database Materials'})
 
 app.layout = html.Div([
     dcc.Markdown(''' 
@@ -28,11 +28,11 @@ app.layout = html.Div([
     html.Div([
 
         html.Div([
-            dcc.Dropdown(
+            dcc.Checklist(
                 id='Material_Class',
                 options=material_classes,
-                value='All Database Materials',
-                placeholder ='Select Material_Class',  
+                values = [material for material in material_data['AM Process'].unique()],
+                # placeholder ='Select Material_Class',  
             )
             
         ],
@@ -78,44 +78,24 @@ app.layout = html.Div([
     dash.dependencies.Output('indicator-graphic', 'figure'),
     [dash.dependencies.Input('xaxis-column', 'value'),
      dash.dependencies.Input('yaxis-column', 'value'),
-      dash.dependencies.Input('Material_Class', 'value')
+      dash.dependencies.Input('Material_Class', 'values')
      ])
 def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
     
-    if Material_Class == 'All Database Materials':
-        
-        data = {'data': [go.Scatter(
-                x=material_data[material_data['AM Process']
-                                == i][xaxis_column_name],
-                y=material_data[material_data['AM Process']
-                                == i][yaxis_column_name],
-                text=material_data[material_data['AM Process'] == i]['Supplier'] + '\n' + material_data[material_data['AM Process']
-                                                                                                        == i]['Name'] + '\n' + material_data[material_data['AM Process'] == i]['Specific Type'],
-                mode='markers',
-                name=i,
-                visible=True,
-                marker={
-                    'size': 16,
-                    'opacity': 0.6,
-                    'line': {'width': 0.1, 'color': 'white'
-                             }
-                }
-                ) for i in material_data['AM Process'].unique()], }
-    else:
-        data = {'data' : [go.Scatter(
-                x=material_data[material_data['AM Process'] == i][xaxis_column_name],
-                y=material_data[material_data['AM Process'] == i][yaxis_column_name],
-                text=material_data[material_data['AM Process'] == i]['Supplier'] + '\n' + material_data[material_data['AM Process'] == i]['Name'] + '\n' + material_data[material_data['AM Process'] == i]['Specific Type'],
-                mode='markers',
-                name=i,
-                visible=True if i == Material_Class else False,
-                marker={
-                    'size': 16,
-                    'opacity': 0.6,
-                    'line': {'width': 0.1, 'color': 'white'
-                             }
-                }
-                ) for i in material_data['AM Process'].unique()],}
+    data = {'data' : [go.Scatter(
+            x=material_data[material_data['AM Process'] == i][xaxis_column_name],
+            y=material_data[material_data['AM Process'] == i][yaxis_column_name],
+            text=material_data[material_data['AM Process'] == i]['Supplier'] + '\n' + material_data[material_data['AM Process'] == i]['Name'] + '\n' + material_data[material_data['AM Process'] == i]['Specific Type'],
+            mode='markers',
+            name=i,
+            visible=True,  # if i == Material_Class else False,
+            marker={
+                'size': 16,
+                'opacity': 0.6,
+                'line': {'width': 0.1, 'color': 'white'
+                            }
+            }
+            ) for i in Material_Class],}
 
     data.update({ 
         'layout': go.Layout(
