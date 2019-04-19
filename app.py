@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
 import pandas as pd
+import numpy as np
 import os
 
 app = dash.Dash(__name__)
@@ -11,12 +12,16 @@ server = app.server
 
 material_data = pd.read_csv(
     'https://gist.githubusercontent.com/sambozek/5150267fd7dff4249ce789ba60ddd905/raw/b695e8869d94e64830b12003954471d11420c232/materials.csv')
-material_data_values = material_data[['Ultimate Tensile Strength (MPa)', 'Tensile Modulus (GPa)', 'Elongation at Break (%)', 'Flexural Modulus (GPa)', 'Heat Deflection Temperature at 0.455 MPa (oC)', 'Heat Deflection Temperature at 1.82 MPa (oC)']].copy()
-material_data_index = material_data[['Name', 'AM Process']].copy()
+material_data_values = material_data[['Ultimate Tensile Strength (MPa)', 'Tensile Modulus (GPa)', 'Elongation at Break (%)', 'Flexural Modulus (GPa)', 'Heat Deflection Temperature at 0.455 MPa (oC)', 'Heat Deflection Temperature at 1.82 MPa (oC)']]
+
+material_data.loc[26, 'AM Process'] = 'polySpectra COR Alpha'
+
+
+#  material_data_index = material_data[['Name', 'AM Process']].copy()
 material_data_columns = list(material_data_values.columns)
 material_classes = [{'label': i, 'value': i} for i in material_data['AM Process'].unique()]
-# material_classes.append(
-#     {'label': 'All Database Materials', 'value': 'All Database Materials'})
+material_classes.remove(
+    {'label':  'polySpectra COR Alpha', 'value': 'polySpectra COR Alpha'})
 
 app.layout = html.Div([
     dcc.Markdown(''' 
@@ -91,7 +96,8 @@ def update_graph(xaxis_column_name, yaxis_column_name, Material_Class):
             visible=True,  # if i == Material_Class else False,
             marker={
                 'size': 16,
-                'opacity': 0.6,
+                'symbol': 'star' if i == 'polySpectra COR Alpha' else 'marker', 
+                'opacity': 1.0 if i == 'polySpectra COR Alpha' else 0.6,
                 'line': {'width': 0.1, 'color': 'white'
                             }
             }
